@@ -11,7 +11,6 @@ A simple and customizable random password generator written in Python. This scri
 - [Installation](#installation)
 - [Usage](#usage)
 - [Examples](#examples)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Introduction
