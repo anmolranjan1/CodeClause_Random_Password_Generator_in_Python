@@ -1,20 +1,27 @@
 import random
 import string
 
-def generate_password(length=12, use_digits=True, use_uppercase=True, use_lowercase=True, use_symbols=True):
+def generate_password(length=None, use_digits=None, use_uppercase=None, use_lowercase=None, use_symbols=None):
     """
     Generate a random password with specified length and character sets.
 
     Parameters:
-        length (int): The length of the password (default is 12).
-        use_digits (bool): Whether to include digits in the password (default is True).
-        use_uppercase (bool): Whether to include uppercase letters in the password (default is True).
-        use_lowercase (bool): Whether to include lowercase letters in the password (default is True).
-        use_symbols (bool): Whether to include symbols in the password (default is True).
+        length (int or None): The length of the password (default is None, which generates a password of length 12).
+        use_digits (bool or None): Whether to include digits in the password (default is None, which includes digits).
+        use_uppercase (bool or None): Whether to include uppercase letters in the password (default is None, which includes uppercase).
+        use_lowercase (bool or None): Whether to include lowercase letters in the password (default is None, which includes lowercase).
+        use_symbols (bool or None): Whether to include symbols in the password (default is None, which includes symbols).
 
     Returns:
         str: The randomly generated password.
     """
+
+    # Default values if parameters are not provided
+    length = length or 12
+    use_digits = use_digits if use_digits is not None else True
+    use_uppercase = use_uppercase if use_uppercase is not None else True
+    use_lowercase = use_lowercase if use_lowercase is not None else True
+    use_symbols = use_symbols if use_symbols is not None else True
 
     # Define character sets
     digits = string.digits if use_digits else ''
@@ -26,28 +33,21 @@ def generate_password(length=12, use_digits=True, use_uppercase=True, use_lowerc
     combined_characters = digits + uppercase_letters + lowercase_letters + symbols
 
     # Ensure at least one character from each set is included
-    password = []
-    if use_digits:
-        password.append(random.choice(digits))
-    if use_uppercase:
-        password.append(random.choice(uppercase_letters))
-    if use_lowercase:
-        password.append(random.choice(lowercase_letters))
-    if use_symbols:
-        password.append(random.choice(symbols))
+    password = [
+        random.choice(digits) if use_digits else '',
+        random.choice(uppercase_letters) if use_uppercase else '',
+        random.choice(lowercase_letters) if use_lowercase else '',
+        random.choice(symbols) if use_symbols else '',
+    ]
 
     # Fill the rest of the password with random characters
-    remaining_length = max(length - len(password), 0)
-    for _ in range(remaining_length):
-        password.append(random.choice(combined_characters))
+    remaining_length = max(length - sum(map(len, password)), 0)
+    password.append(''.join(random.choices(combined_characters, k=remaining_length)))
 
     # Shuffle the password to mix characters randomly
-    random.shuffle(password)
+    password = ''.join(random.sample(''.join(password), len(''.join(password))))
 
-    # Convert the list of characters to a string
-    final_password = ''.join(password)
-
-    return final_password
+    return password
 
 # Example usage:
 if __name__ == "__main__":
